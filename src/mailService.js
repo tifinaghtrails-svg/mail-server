@@ -17,7 +17,16 @@ const smtpPassword = () => {
   return isGmailSmtp() ? password.replace(/\s+/g, "") : password;
 };
 
-export const missingEnv = () => requiredEnv.filter((key) => !envValue(key));
+export const missingEnv = () => {
+  const missing = requiredEnv.filter((key) => !envValue(key));
+  const normalizedPassword = smtpPassword();
+
+  if (isGmailSmtp() && normalizedPassword && normalizedPassword.length !== 16) {
+    missing.push("SMTP_PASS_GMAIL_APP_PASSWORD_FORMAT");
+  }
+
+  return missing;
+};
 
 export const mailStatus = ({ includeDetails = false } = {}) => {
   const missing = missingEnv();
