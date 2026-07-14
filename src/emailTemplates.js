@@ -5,6 +5,8 @@ const brand = {
   muted: "#60706a",
   soft: "#f6f1ea",
   panel: "#ffffff",
+  phone: "+212 657-794841",
+  whatsappHref: "https://wa.me/212657794841",
 };
 
 const escapeHtml = (value = "") =>
@@ -106,19 +108,20 @@ export const ownerBookingEmail = (booking) =>
 
 export const customerBookingEmail = (booking) =>
   layout({
-    eyebrow: "Booking request received",
+    eyebrow: "Reservation request received",
     title: `Thank you, ${booking.fullName.split(" ")[0] || "traveler"}`,
-    intro: "Your Atlas Mountains trip request has reached Mustapha. We will review your dates and answer with the next steps.",
+    intro: "Your reservation request has reached Mustapha. We will contact you very soon to confirm the details and next steps.",
     children: `
-      <p style="margin:0 0 18px;color:${brand.ink};font-size:16px;line-height:1.7;">Here is a clean copy of your request.</p>
+      <p style="margin:0 0 18px;color:${brand.ink};font-size:16px;line-height:1.7;">Your reservation request is done and safely received. Here is a clean copy of your request.</p>
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0">${bookingRows(booking)}</table>
       <div style="margin-top:24px;padding:18px;border-radius:14px;background:${brand.soft};">
-        <p style="margin:0;color:${brand.ink};font-size:15px;line-height:1.7;">Keep this reference for your conversation with us: <strong>${escapeHtml(booking.reference)}</strong>.</p>
+        <p style="margin:0 0 10px;color:${brand.ink};font-size:15px;line-height:1.7;">Keep this reference for your conversation with us: <strong>${escapeHtml(booking.reference)}</strong>.</p>
+        <p style="margin:0;color:${brand.ink};font-size:15px;line-height:1.7;">If you need more details before we reply, call or message us on WhatsApp: <strong>${escapeHtml(brand.phone)}</strong>.</p>
       </div>
     `,
     ctaLabel: "Message us on WhatsApp",
-    ctaHref: "https://wa.me/212657794841",
-    footer: "We usually respond within 24 hours. For urgent changes, WhatsApp is the fastest way to reach us.",
+    ctaHref: brand.whatsappHref,
+    footer: `We usually respond very soon. For urgent questions, WhatsApp is the fastest way to reach us: ${brand.phone}.`,
   });
 
 export const ownerContactEmail = (message) =>
@@ -156,6 +159,6 @@ export const customerContactEmail = (message) =>
       </div>
     `,
     ctaLabel: "Contact on WhatsApp",
-    ctaHref: "https://wa.me/212657794841",
+    ctaHref: brand.whatsappHref,
     footer: "We usually respond within 24 hours. For urgent questions, WhatsApp is fastest.",
   });
