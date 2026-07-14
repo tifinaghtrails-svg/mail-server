@@ -13,11 +13,37 @@ import {
 
 const app = express();
 const port = Number(process.env.PORT || 5174);
-const siteUrl = process.env.SITE_URL || "http://localhost:5173";
+const configuredOrigins = String(process.env.SITE_URL || "http://localhost:5173")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+const allowedOriginPatterns = [
+  /^https:\/\/tifinaghtrails\.com$/i,
+  /^https:\/\/www\.tifinaghtrails\.com$/i,
+  /^https:\/\/tifinaghtrails\.vercel\.app$/i,
+  /^https:\/\/tifinaghtrails-[a-z0-9-]+\.vercel\.app$/i,
+  /^https:\/\/tifinaghtrails-[a-z0-9-]+-tifinaghtrails-8035s-projects\.vercel\.app$/i,
+];
+
+const isAllowedOrigin = (origin) =>
+  !origin || configuredOrigins.includes(origin) || allowedOriginPatterns.some((pattern) => pattern.test(origin));
 
 const fail = (res, status, message, details) => res.status(status).json({ ok: false, message, details });
 
-app.use(cors({ origin: siteUrl, credentials: false }));
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (isAllowedOrigin(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error("Not allowed by CORS"));
+    },
+    credentials: false,
+  })
+);
 app.use(express.json({ limit: "32kb" }));
 
 app.use((error, _req, res, next) => {
